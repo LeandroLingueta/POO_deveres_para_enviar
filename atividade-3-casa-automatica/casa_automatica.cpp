@@ -11,6 +11,12 @@ private:
     double valorAtual;
 
 public:
+
+
+    SensorAnalogico(std::string tag) : tag(tag) {}
+
+    SensorAnalogico(std::string tag, std::string unidade, double minimo, double maximo, double valor)
+        : tag(tag), unidade(unidade), minimo(minimo), maximo(maximo), valorAtual(valor) {}
     // TODO: criar um construtor minimo que receba apenas a tag.
     // Dica: use uma faixa padrao coerente.
 
@@ -29,6 +35,7 @@ private:
     double velocidade;
 
 public:
+
     // TODO: criar um construtor minimo.
 
     // TODO: criar um construtor completo com velocidade inicial.
