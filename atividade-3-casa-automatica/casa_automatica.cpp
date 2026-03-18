@@ -11,16 +11,11 @@ private:
     double valorAtual;
 
 public:
+    SensorNivel(string tag)
+        : tag(tag), minimo(0.0), maximo(0.0), valorAtual(0.0) {}
 
-
-    SensorAnalogico(std::string tag) : tag(tag) {}
-
-    SensorAnalogico(std::string tag, std::string unidade, double minimo, double maximo, double valor)
-        : tag(tag), unidade(unidade), minimo(minimo), maximo(maximo), valorAtual(valor) {}
-    // TODO: criar um construtor minimo que receba apenas a tag.
-    // Dica: use uma faixa padrao coerente.
-
-    // TODO: criar um construtor completo com tag, minimo, maximo e valorAtual.
+    SensorNivel(string tag, double minimo, double maximo, double valor)
+        : tag(tag), minimo(minimo), maximo(maximo), valorAtual(valor) {}
 
     void exibirResumo() const {
         cout << "[SensorNivel] " << tag
@@ -35,10 +30,11 @@ private:
     double velocidade;
 
 public:
+    Bomba(string tag)
+        : tag(tag), velocidade(0.0) {}
 
-    // TODO: criar um construtor minimo.
-
-    // TODO: criar um construtor completo com velocidade inicial.
+    Bomba(string tag, double velocidade)
+        : tag(tag), velocidade(velocidade) {}
 
     void exibirResumo() const {
         cout << "[Bomba] " << tag
@@ -53,9 +49,11 @@ private:
     double kp;
 
 public:
-    // TODO: criar um construtor minimo.
+    ControladorTanque(string tag)
+        : tag(tag), setpoint(0.0), kp(0.0) {}
 
-    // TODO: criar um construtor completo com setpoint e kp.
+    ControladorTanque(string tag, double setpoint, double kp)
+        : tag(tag), setpoint(setpoint), kp(kp) {}
 
     void exibirResumo() const {
         cout << "[ControladorTanque] " << tag
@@ -65,12 +63,21 @@ public:
 };
 
 int main() {
-    // TODO: crie ao menos dois objetos de cada classe usando sobrecarga.
-    // Exemplo esperado:
-    // SensorNivel sn1("LT-401");
-    // SensorNivel sn2("LT-402", 0.0, 5000.0, 2780.0);
+    SensorNivel sn1("LT-401");
+    SensorNivel sn2("LT-402", 0.0, 5000.0, 2780.0);
 
-    // TODO: chame exibirResumo() para todos os objetos.
+    Bomba b1("PM-100");
+    Bomba b2("PM-101", 75.0);
+
+    ControladorTanque c1("PID-01");
+    ControladorTanque c2("PID-02", 3000.0, 1.5);
+
+    sn1.exibirResumo();
+    sn2.exibirResumo();
+    b1.exibirResumo();
+    b2.exibirResumo();
+    c1.exibirResumo();
+    c2.exibirResumo();
 
     return 0;
 }
