@@ -1,0 +1,140 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class AtivoCampo {
+private:
+    string tag;
+    bool bloqueado;
+
+protected:
+    string area;
+
+    void redefinirArea(string novaArea) {
+        area = novaArea;
+    }
+
+public:
+    AtivoCampo(string novaTag, string novaArea)
+        : tag(novaTag), bloqueado(false), area(novaArea) {}
+
+    string getTag() const {
+        return tag;
+    }
+
+    bool estaBloqueado() const {
+        return bloqueado;
+    }
+
+    void bloquear() {
+        bloqueado = true;
+    }
+
+    void liberar() {
+        bloqueado = false;
+    }
+};
+
+class SensorNivel : public AtivoCampo {
+private:
+    double nivelAtual;
+    double limiteAlto;
+
+public:
+    SensorNivel(string novaTag, string novaArea, double inicialNivel, double limAlta)
+        : AtivoCampo(novaTag, novaArea), nivelAtual(inicialNivel), limiteAlto(limAlta) {
+        if (nivelAtual < 0) {
+            nivelAtual = 0;
+        }
+        if (limiteAlto < 0) {
+            limiteAlto = 0;
+        }
+    }
+
+    void atualizarNivel(double novoNivel) {
+        if (estaBloqueado()) {
+            return;
+        }
+        if (novoNivel < 0) {
+            return;
+        }
+        nivelAtual = novoNivel;
+    }
+
+    void exibirResumo() const {
+        cout << "SensorNivel - tag: " << getTag()
+             << ", area: " << area
+             << ", nivelAtual: " << nivelAtual
+             << ", limiteAlto: " << limiteAlto << endl;
+    }
+
+    friend void inspecaoTecnica(const SensorNivel& sensor);
+};
+
+void inspecaoTecnica(const SensorNivel& sensor) {
+    cout << "Inspecao tecnica -> tag: " << sensor.getTag()
+         << ", area: " << sensor.area
+         << ", nivelAtual: " << sensor.nivelAtual
+         << ", limiteAlto: " << sensor.limiteAlto
+         << ", bloqueado: " << (sensor.estaBloqueado() ? "sim" : "nao")
+         << endl;
+}
+
+class BombaDosadora : public AtivoCampo {
+private:
+    double vazaoPercentual;
+
+public:
+    BombaDosadora(string novaTag, string novaArea, double inicialVazao)
+        : AtivoCampo(novaTag, novaArea), vazaoPercentual(inicialVazao) {
+        if (vazaoPercentual < 0) {
+            vazaoPercentual = 0;
+        } else if (vazaoPercentual > 100) {
+            vazaoPercentual = 100;
+        }
+    }
+
+    void ajustarVazao(double novaVazao) {
+        if (estaBloqueado()) {
+            return;
+        }
+        if (novaVazao < 0) {
+            vazaoPercentual = 0;
+        } else if (novaVazao > 100) {
+            vazaoPercentual = 100;
+        } else {
+            vazaoPercentual = novaVazao;
+        }
+    }
+
+    void moverParaArea(string novaArea) {
+        redefinirArea(novaArea);
+    }
+
+    void exibirResumo() const {
+        cout << "BombaDosadora - tag: " << getTag()
+             << ", area: " << area
+             << ", vazaoPercentual: " << vazaoPercentual << "%" << endl;
+    }
+};
+
+int main() {
+    SensorNivel sensor("S1", "Reservatorio", 30.0, 80.0);
+    BombaDosadora bomba("B1", "SalaDosadora", 50.0);
+
+    sensor.atualizarNivel(60.0);
+    bomba.ajustarVazao(75.0);
+
+    sensor.bloquear();
+    sensor.atualizarNivel(10.0); // não altera porque bloqueado
+
+    bomba.moverParaArea("SalaExpansao");
+
+    sensor.exibirResumo();
+    bomba.exibirResumo();
+
+    inspecaoTecnica(sensor);
+
+    return 0;
+}
